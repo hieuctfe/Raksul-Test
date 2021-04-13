@@ -1,12 +1,17 @@
 <template>
   <div class="price-viewer-container">
     <Card title="Select Page size">
-      <PageSetting :initSelectedPage="selectedPage" @apply="applyPageHandler" />
+      <PageSetting :initSelectedPage="selectedPage" @apply="fetchPrice" />
     </Card>
     <Card title="Price Table">
       <PriceTable v-if="pricesData" :table-data="tableData" />
     </Card>
-    <button v-if="pricesData && !isSeeMoreClicked" @click="isSeeMoreClicked = true">See more</button>
+    <button
+      v-if="pricesData && !isSeeMoreClicked"
+      @click="isSeeMoreClicked = true"
+    >
+      See more
+    </button>
   </div>
 </template>
 
@@ -36,16 +41,21 @@ export default {
   computed: {
     priceTable() {
       if (!this.pricesData?.prices) return null;
-      return this.isSeeMoreClicked ? this.pricesData.prices : this.pricesData.prices.slice(0, 5);
+      return this.isSeeMoreClicked
+        ? this.pricesData.prices
+        : this.pricesData.prices.slice(0, 5);
     },
     columnHeaders() {
       if (!this.priceTable) return [{}];
-      return [{}, ...this.priceTable[0]?.map(e => ({title: e.business_day}))];
+      return [
+        {},
+        ...this.priceTable[0]?.map((e) => ({ title: e.business_day })),
+      ];
     },
     tableData() {
       if (!this.priceTable) return [this.columnHeaders];
       const prices = JSON.parse(JSON.stringify(this.priceTable));
-      prices?.forEach(e => e.unshift({title: e[0].quantity}));
+      prices?.forEach((e) => e.unshift({ title: e[0].quantity }));
       return [this.columnHeaders, ...prices];
     },
   },
@@ -57,9 +67,6 @@ export default {
       } catch (error) {
         alert("Some thing when wrong");
       }
-    },
-    applyPageHandler(pageSize) {
-      this.fetchPrice(pageSize);
     },
   },
 };

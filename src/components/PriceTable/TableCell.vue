@@ -1,14 +1,14 @@
 <template>
   <th
     v-if="isRowHeader"
-    :class="{'is-highlight': isHighlight, 'is-hover': isHover}"
+    :class="{ 'is-highlight': isHighlight, 'is-hover': isHover }"
     @mouseover="$emit('hover-cell', cellData)"
   >
     {{ cellData }}
   </th>
   <td
     v-else
-    :class="{'is-highlight': isHighlight, 'is-hover': isHover}"
+    :class="{ 'is-highlight': isHighlight, 'is-hover': isHover }"
     @mouseover="$emit('hover-cell', cellData)"
   >
     {{ cellData }}
@@ -34,10 +34,16 @@ export default {
   },
   computed: {
     isHighlight() {
-      return this.hoveredItem.business_day === this.cellData.business_day || this.hoveredItem.quantity === this.cellData.quantity;
+      return (
+        this.hoveredItem.business_day === this.cellData.business_day ||
+        this.hoveredItem.quantity === this.cellData.quantity
+      );
     },
     isHover() {
-      return this.hoveredItem.business_day === this.cellData.business_day && this.hoveredItem.quantity === this.cellData.quantity;
+      return (
+        this.hoveredItem.business_day === this.cellData.business_day &&
+        this.hoveredItem.quantity === this.cellData.quantity
+      );
     },
   },
 };
