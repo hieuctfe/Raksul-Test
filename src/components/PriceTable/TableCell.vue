@@ -1,15 +1,12 @@
 <template>
-  <th
-    v-if="isRowHeader"
-    :class="{ 'is-highlight': isHighlight, 'is-hover': isHover }"
-    @mouseover="$emit('hover-cell', cellData)"
-  >
+  <th v-if="isRowHeader">
     {{ cellData }}
   </th>
   <td
     v-else
-    :class="{ 'is-highlight': isHighlight, 'is-hover': isHover }"
+    :class="{ 'is-highlighted': isHighlighted, 'is-hovered': isHovered, 'is-selected': isSelected }"
     @mouseover="$emit('hover-cell', cellData)"
+    @click="$emit('click-cell', cellData)"
   >
     {{ cellData }}
   </td>
@@ -23,27 +20,21 @@ export default {
       type: Boolean,
       default: false,
     },
+    isHighlighted: {
+      type: Boolean,
+      default: false,
+    },
+    isHovered: {
+      type: Boolean,
+      default: false,
+    },
+    isSelected: {
+      type: Boolean,
+      default: false,
+    },
     cellData: {
       type: Object,
       default: () => ({}),
-    },
-    hoveredItem: {
-      type: Object,
-      default: () => ({}),
-    },
-  },
-  computed: {
-    isHighlight() {
-      return (
-        this.hoveredItem.business_day === this.cellData.business_day ||
-        this.hoveredItem.quantity === this.cellData.quantity
-      );
-    },
-    isHover() {
-      return (
-        this.hoveredItem.business_day === this.cellData.business_day &&
-        this.hoveredItem.quantity === this.cellData.quantity
-      );
     },
   },
 };
@@ -55,10 +46,14 @@ export default {
   height: 100px;
   font-size: 10px;
 }
-.is-highlight {
+.is-highlighted {
   background-color: rgba(0, 0, 0, 0.1);
 }
-.is-hover {
-  background-color: rgba(0, 0, 0, 0.3);
+.is-hovered {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+.is-selected {
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #ffffff;
 }
 </style>

@@ -1,17 +1,20 @@
 <template>
   <div class="price-viewer-container">
-    <Card title="Select Page size">
+    <Card title="Select Page size" class="select-page-size-section">
       <PageSetting :initSelectedPage="selectedPage" @apply="fetchPrice" />
     </Card>
-    <Card title="Price Table">
-      <PriceTable v-if="pricesData" :table-data="tableData" />
+    <Card title="Price Table" class="price-table-section">
+      <PriceTable v-if="pricesData" :table-data="priceTable" :selected-item="selectedItem" @click-cell="toggleSelectedPrice" />
+      <button
+        v-if="pricesData && !isSeeMoreClicked"
+        @click="isSeeMoreClicked = true"
+      >
+        See more
+      </button>
     </Card>
-    <button
-      v-if="pricesData && !isSeeMoreClicked"
-      @click="isSeeMoreClicked = true"
-    >
-      See more
-    </button>
+    <Card class="order-price-section">
+      <OrderPrice :item="selectedItem" />
+    </Card>
   </div>
 </template>
 
@@ -19,6 +22,7 @@
 import Card from "./Card";
 import PageSetting from "./PageSetting";
 import PriceTable from "./PriceTable";
+import OrderPrice from "./OrderPrice";
 import { PAGE_SIZE } from "../utils/constants";
 import { getPrice } from "../service/price";
 export default {
@@ -27,12 +31,14 @@ export default {
     Card,
     PageSetting,
     PriceTable,
+    OrderPrice,
   },
   data() {
     return {
       selectedPage: PAGE_SIZE.A5,
       pricesData: null,
       isSeeMoreClicked: false,
+      selectedItem: null,
     };
   },
   mounted() {
@@ -45,19 +51,6 @@ export default {
         ? this.pricesData.prices
         : this.pricesData.prices.slice(0, 5);
     },
-    columnHeaders() {
-      if (!this.priceTable) return [{}];
-      return [
-        {},
-        ...this.priceTable[0]?.map((e) => ({ title: e.business_day })),
-      ];
-    },
-    tableData() {
-      if (!this.priceTable) return [this.columnHeaders];
-      const prices = JSON.parse(JSON.stringify(this.priceTable));
-      prices?.forEach((e) => e.unshift({ title: e[0].quantity }));
-      return [this.columnHeaders, ...prices];
-    },
   },
   methods: {
     async fetchPrice(page) {
@@ -68,8 +61,16 @@ export default {
         alert("Some thing when wrong");
       }
     },
+    toggleSelectedPrice(cellData) {
+      this.selectedItem = !this.selectedItem ||
+      this.selectedItem.business_day !== cellData.business_day ||
+      this.selectedItem.quantity !== cellData.quantity
+        ? cellData : null;
+    },
   },
 };
 </script>
 
-<style scoped></style>
+<style>
+
+</style>

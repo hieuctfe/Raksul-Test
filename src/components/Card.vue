@@ -17,4 +17,9 @@ export default {
 </script>
 
 <style scoped>
+.component-container {
+  padding: 20px;
+  margin: 10px;
+  background-color: rgba(0, 0, 0, 0.1);
+}
 </style>
