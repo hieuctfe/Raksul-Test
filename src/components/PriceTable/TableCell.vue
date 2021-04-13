@@ -8,7 +8,7 @@
     @mouseover="$emit('hover-cell', cellData)"
     @click="$emit('click-cell', cellData)"
   >
-    {{ cellData }}
+    {{ cellData.price }}
   </td>
 </template>
 
@@ -33,8 +33,8 @@ export default {
       default: false,
     },
     cellData: {
-      type: Object,
-      default: () => ({}),
+      type: String,
+      default: '',
     },
   },
 };

@@ -1,9 +1,6 @@
 <template>
   <table class="price-table-container" border="1" cellspacing="0">
-    <TableRow
-      :is-col-header="true"
-      :row-data="columnHeaders"
-    />
+    <TableRow :is-col-header="true" :row-data="columnHeaders" />
     <TableRow
       v-for="(rowPrice, index) in tableData"
       :key="index"
@@ -41,19 +38,20 @@ export default {
   },
   computed: {
     columnHeaders() {
-      return [1, 2, 3, 4, 5].map(e => ({title: e}));
+      return this.tableData[0].map((row) => `Business day ${row.business_day}`);
     },
   },
   methods: {
     getRowHeader(rowData) {
-      return {title: rowData[0].quantity};
+      return { title: rowData[0].quantity };
     },
   },
 };
 </script>
 
 <style scoped>
-table {
+.price-table-container {
   background-color: #ffffff;
+  margin: auto;
 }
 </style>

@@ -2,7 +2,7 @@
   <tr>
     <TableCell
       :is-row-header="true"
-      :cell-data="rowHeader"
+      :cell-data="rowHeader.title ? `Quantity ${rowHeader.title}` : ''"
     />
     <TableCell
       v-for="(cellData, index) in rowData"
@@ -49,23 +49,29 @@ export default {
   },
   methods: {
     isCellHighlighted(cellData) {
-      return !this.isColHeader && !this.selectedItem && (
-        this.hoveredItem.business_day === cellData.business_day ||
-        this.hoveredItem.quantity === cellData.quantity
+      return (
+        !this.isColHeader &&
+        !this.selectedItem &&
+        (this.hoveredItem.business_day === cellData.business_day ||
+          this.hoveredItem.quantity === cellData.quantity)
       );
     },
     isCellHovered(cellData) {
-      return !this.isColHeader && !this.selectedItem && (
+      return (
+        !this.isColHeader &&
+        !this.selectedItem &&
         this.hoveredItem.business_day === cellData.business_day &&
         this.hoveredItem.quantity === cellData.quantity
       );
     },
     isCellSelected(cellData) {
-      return !this.isColHeader &&
+      return (
+        !this.isColHeader &&
         this.selectedItem &&
         this.selectedItem.business_day === cellData.business_day &&
         this.selectedItem.quantity === cellData.quantity &&
-        this.selectedItem.price === cellData.price;
+        this.selectedItem.price === cellData.price
+      );
     },
   },
 };
