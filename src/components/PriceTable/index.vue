@@ -1,11 +1,14 @@
 <template>
-  <div class="price-table-container">
+  <table class="price-table-container" border="1">
     <TableRow
       v-for="(rowPrice, index) in tableData"
+      :is-col-header="!index"
       :key="index"
       :row-data="rowPrice"
+      :hovered-item="hoveredItem"
+      @hover-cell="hoveredItem = $event"
     />
-  </div>
+  </table>
 </template>
 
 <script>
@@ -20,6 +23,11 @@ export default {
       type: Array,
       default: () => [],
     },
+  },
+  data() {
+    return {
+      hoveredItem: {},
+    };
   },
 };
 </script>

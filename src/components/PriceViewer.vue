@@ -4,8 +4,9 @@
       <PageSetting :initSelectedPage="selectedPage" @apply="applyPageHandler" />
     </Card>
     <Card title="Price Table">
-      <PriceTable v-if="pricesData" :table-data="pricesData.prices" />
+      <PriceTable v-if="pricesData" :table-data="tableData" />
     </Card>
+    <button v-if="pricesData && !isSeeMoreClicked" @click="isSeeMoreClicked = true">See more</button>
   </div>
 </template>
 
@@ -26,15 +27,33 @@ export default {
     return {
       selectedPage: PAGE_SIZE.A5,
       pricesData: null,
+      isSeeMoreClicked: false,
     };
   },
   mounted() {
     this.fetchPrice(this.selectedPage);
   },
+  computed: {
+    priceTable() {
+      if (!this.pricesData?.prices) return null;
+      return this.isSeeMoreClicked ? this.pricesData.prices : this.pricesData.prices.slice(0, 5);
+    },
+    columnHeaders() {
+      if (!this.priceTable) return [{}];
+      return [{}, ...this.priceTable[0]?.map(e => ({title: e.business_day}))];
+    },
+    tableData() {
+      if (!this.priceTable) return [this.columnHeaders];
+      const prices = JSON.parse(JSON.stringify(this.priceTable));
+      prices?.forEach(e => e.unshift({title: e[0].quantity}));
+      return [this.columnHeaders, ...prices];
+    },
+  },
   methods: {
     async fetchPrice(page) {
       try {
         this.pricesData = await getPrice(page);
+        this.isSeeMoreClicked = false;
       } catch (error) {
         alert("Some thing when wrong");
       }
